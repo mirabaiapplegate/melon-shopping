@@ -12,7 +12,6 @@ import jinja2
 
 import melons
 
-
 app = Flask(__name__)
 
 # Need to use Flask sessioning features
@@ -51,7 +50,7 @@ def show_melon(melon_id):
     """
 
     melon = melons.get_by_id(melon_id)
-    print melon
+
     return render_template("melon_details.html",
                            display_melon=melon)
 
@@ -59,6 +58,23 @@ def show_melon(melon_id):
 @app.route("/cart")
 def shopping_cart():
     """Display content of shopping cart."""
+    
+    cart = {}
+
+    for item in session["cart"]:
+        if item in cart:
+            cart[item] += 1
+        else:
+            cart[item] = 1
+    print cart
+
+    # TODO make this really work
+    for melon_id in cart.keys():
+        melon = melons.get_by_id(melon_id)
+        melon_name = melon.common_name
+        melon_price = melon.price
+        melon_quantity = cart[melon_id]
+
 
     # TODO: Display the contents of the shopping cart.
 
@@ -88,8 +104,9 @@ def add_to_cart(id):
 
     melon = melons.get_by_id(id)
 
-    flash("{} successfully added to cart.".format(melon.melon_type))
-    return render_template("cart.html")
+    ######TODO printing melon type not melon name
+    flash("{} successfully added to cart.".format(melon.common_name))
+    return redirect("/cart")
 
 
 @app.route("/login", methods=["GET"])
