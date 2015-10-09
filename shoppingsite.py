@@ -60,34 +60,28 @@ def shopping_cart():
     """Display content of shopping cart."""
     
     cart = {}
+    order_total = 0
 
     for item in session["cart"]:
         if item in cart:
             cart[item] += 1
         else:
             cart[item] = 1
-    print cart
 
-    # TODO make this really work
     for melon_id in cart.keys():
         melon = melons.get_by_id(melon_id)
+        melon_quantity = cart[melon_id]
         melon_name = melon.common_name
         melon_price = melon.price
-        melon_quantity = cart[melon_id]
+        cart[melon_id] = [melon_name, melon_quantity, melon_price]
 
 
-    # TODO: Display the contents of the shopping cart.
+    for melon in cart:
+        order_total = order_total + melon_quantity * melon_price
 
-    # The logic here will be something like:
-    #
-    # - get the list-of-ids-of-melons from the session cart
-    # - loop over this list:
-    #   - keep track of information about melon types in the cart
-    #   - keep track of the total amt ordered for a melon-type
-    #   - keep track of the total amt of the entire order
-    # - hand to the template the total order cost and the list of melon types
 
-    return render_template("cart.html")
+    return render_template("cart.html", cart=cart, 
+                            order_total=order_total)
 
 @app.route("/add_to_cart/<int:id>")
 def add_to_cart(id):
@@ -104,7 +98,6 @@ def add_to_cart(id):
 
     melon = melons.get_by_id(id)
 
-    ######TODO printing melon type not melon name
     flash("{} successfully added to cart.".format(melon.common_name))
     return redirect("/cart")
 

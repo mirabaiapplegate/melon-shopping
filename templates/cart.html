@@ -13,18 +13,18 @@
         </tr>
         </thead>
         <tbody>
+        {% for melon in cart %}
         <tr>
-            <!-- TODO make this not sudo and work with Jinja -->
-            <td> {{ melon_name }} </td>
-            <td> {{ quantity }} </td>
-            <td> {{ price }} </td>
-            <td> {{ quantity * price }} </td>
+            <th>{{ cart[melon][0] }}</th>
+            <th>{{ cart[melon][1] }}</th>
+            <th>{{ cart[melon][2] }}</th>
+            <th>{{ cart[melon][1] * cart[melon][2] }}</th>
         </tr>
-
+        {% endfor %}
         </tbody>
     </table>
 
-    <h3>Total: $27.00</h3>
+    <h3>Total: {{ order_total }}</h3>
 
     <a href="/checkout" class="btn btn-large btn-primary">Check Out</a>
 
